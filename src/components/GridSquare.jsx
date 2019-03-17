@@ -19,7 +19,7 @@ function GridSquare(props) {
   }, [terrainType])
 
   function cycleTerrain() {
-    if (!props.gameState) {
+    if (props.gameState === 0) {
       updateTerrain((terrainType + 1) % 5);
     }
   }

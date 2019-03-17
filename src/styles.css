@@ -1,5 +1,17 @@
 /* 6 across, 8 down */
+#main {
+  display: flex
+}
+
+#infoTab {
+  width: 100%;
+  margin: 10px;
+  border: 2px solid black;
+}
+
 #gameBoard {
+  margin: 10px;
+  flex: 1;
   position:relative;
   justify-content: center;
 }
@@ -16,6 +28,12 @@
   margin: auto;
 }
 
+#selectorTab {
+  margin: 10px;
+  width: 100%;
+  border: 2px solid black
+}
+
 .column {
   flex: 1;
 }
@@ -28,25 +46,30 @@
 
 .land {
   /* Normal  Terrain */
-  background-color: rgba(60, 255, 0, 0.5);
+  background-color: rgb(173, 255, 148);
 }
 
 .forest {
   /* Infantry can only walk into this if adjacent, and cavalry cannot pass or enter */
-  background-color: rgba(20, 87, 0, 1);
+  background-color: rgba(20, 87, 0);
 }
 
 .water {
   /* The catch all for "terrain only accessible by fliers */
-  background-color: rgba(17, 0, 255, 0.5);
+  background-color: rgba(17, 0, 255);
 }
 
 .wall {
   /* Ipassable terrain */
-  background-color: rgba(95, 95, 95, 0.5);
+  background-color: rgba(95, 95, 95);
 }
 
 .trench {
   /* Forests for cavs.  Normal for all other movement types */
   background-color: rgb(255, 174, 0);
+}
+
+.origin {
+  border: 1px solid greenyellow;
+  border-radius: 20px;
 }
