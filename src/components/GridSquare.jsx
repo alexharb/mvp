@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 function GridSquare(props) {
   const [terrainType, updateTerrain] = useState(0);
   const [terrainLabel, updateLabel] = useState('land');
+  const [isStart, updateStart] = useState(false);
 
   useEffect(() => {
     if (terrainType === 4) {
@@ -18,14 +19,26 @@ function GridSquare(props) {
     }
   }, [terrainType])
 
-  function cycleTerrain() {
+  function cycleTerrain(event) {
+    let target = event.target;
     if (props.gameState === 0) {
       updateTerrain((terrainType + 1) % 5);
+    } else if (props.gameState === 2) {
+      if (isStart) {
+        updateStart(false);
+      } else {
+        updateStart(true);
+      }
     }
   }
 
   return(
-    <div className={`square ${terrainLabel}`} onClick={cycleTerrain}></div>
+    <div className={`square ${terrainLabel}`} onClick={cycleTerrain}>
+    {isStart && 
+      <div className="startingPosition enemy">
+      </div>
+    }
+    </div>
   )
 }
 

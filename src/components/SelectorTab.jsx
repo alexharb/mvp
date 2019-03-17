@@ -1,13 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import Unit from '../classes/Unit.js'
+import Unit from '../classes/Unit.js';
+import UnitView from './UnitView.jsx';
 
 function SelectorTab(props) {
-
+  const [armyCount, setArmyCount] = useState(0);
 
   function handleAdd(event) {
+    let side;
     let army = document.getElementById('armySelector').value;
-    let unit = new Unit();
-    props.recruit(army, unit);
+    if (army === '1') {
+      side = 'enemy';
+    } else {
+      side = 'player';
+    }
+    if (props.armies[side].units.length === props.armies[side].max) {
+      alert(`The ${side}'s army already has ${props.armies[side].max} recruit(s).  Please remove a unit to add a new one.`);
+    } else {
+      let unit = new Unit();
+      props.recruit(army, unit);
+      setArmyCount(armyCount + 1)
+    }
   }
 
   return(
@@ -63,6 +75,13 @@ function SelectorTab(props) {
         <button onClick={handleAdd}>Deploy</button>
         </div>
       }
+      {props.armies.player.units.map((each) => {
+        console.log(each);
+        return <UnitView unit={each}/>
+      })}
+      {props.armies.enemy.units.map((each) => {
+        return <UnitView unit={each}/>
+      })}
     </div>
   )
 }

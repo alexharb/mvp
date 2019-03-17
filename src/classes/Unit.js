@@ -1,4 +1,5 @@
 var Unit = function() {
+  this.type = 0, //0 is infantry, 1 is armor, 2 is flying, 3 is cavalier
   this.stats = {
     HP: 1,
     Atk: 1,

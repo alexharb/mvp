@@ -39,6 +39,10 @@
 }
 
 .square {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   height: 46px;
   width: 46px;
   border: 2px solid black;
@@ -69,7 +73,17 @@
   background-color: rgb(255, 174, 0);
 }
 
-.origin {
-  border: 1px solid greenyellow;
+.startingPosition {
+  height: 80%;
+  width: 80%;
+  border: 1px solid;
   border-radius: 20px;
+}
+
+.startingPosition.enemy {
+  border-color: red;
+}
+
+.startingPosition.player {
+  border-color: blue;
 }
