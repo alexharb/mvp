@@ -4,6 +4,7 @@ function GridSquare(props) {
   const [terrainType, updateTerrain] = useState(0);
   const [terrainLabel, updateLabel] = useState('land');
   const [isStart, updateStart] = useState(false);
+  const [startValueTeam, updateTeam] = useState('enemy');
 
   useEffect(() => {
     if (terrainType === 4) {
@@ -35,7 +36,7 @@ function GridSquare(props) {
   return(
     <div className={`square ${terrainLabel}`} onClick={cycleTerrain}>
     {isStart && 
-      <div className="startingPosition enemy">
+      <div className={`startingPosition ${startValueTeam}`}>
       </div>
     }
     </div>

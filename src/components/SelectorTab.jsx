@@ -22,9 +22,19 @@ function SelectorTab(props) {
     }
   }
 
+  function handleSwap(event) {
+    let target = event.target;
+    console.log(target.value);
+    if (target.value === 'player') {
+      props.toggleArmy(0);
+    } else {
+      props.toggleArmy(1);
+    }
+  }
+
   return(
     <div id="selectorTab">
-      { props.prepPhase === 0 &&
+      {props.prepPhase === 0 &&
       <div>
       <label htmlFor="playerSize">Select the size of the player's army:</label><br></br>
 
@@ -75,12 +85,23 @@ function SelectorTab(props) {
         <button onClick={handleAdd}>Deploy</button>
         </div>
       }
+      {props.prepPhase === 2 && 
+        <div>
+          <div>
+            <input type="radio" value="player" name="starter" onChange={handleSwap}/>
+            <label htmlFor="player">Player</label>
+          </div>
+          <div>
+            <input type="radio" value="enemy" name="starter" onChange={handleSwap}/>
+            <label htmlFor="enemy">Enemy</label>
+          </div>
+        </div>
+      }
       {props.armies.player.units.map((each) => {
-        console.log(each);
-        return <UnitView unit={each}/>
+        return <UnitView unit={each} team={'player'}/>
       })}
       {props.armies.enemy.units.map((each) => {
-        return <UnitView unit={each}/>
+        return <UnitView unit={each} team={'enemy'}/>
       })}
     </div>
   )
