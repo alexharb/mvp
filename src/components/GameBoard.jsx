@@ -3,6 +3,7 @@ import MapColumn from './MapColumn.jsx';
 
 
 function GameBoard(props) {
+  const { prepPhase, changePrepPhase, activeArmy, armies } = props
   const [gameState, setGame] = useState(false)
 
   function startGame() {
@@ -12,18 +13,19 @@ function GameBoard(props) {
   return(
   <div id="gameBoard">
     <div id="map">
-      <MapColumn gameState={props.prepPhase}/>
-      <MapColumn gameState={props.prepPhase}/>
-      <MapColumn gameState={props.prepPhase}/>
-      <MapColumn gameState={props.prepPhase}/>
-      <MapColumn gameState={props.prepPhase}/>
-      <MapColumn gameState={props.prepPhase}/>
+      <MapColumn gameState={prepPhase} activeArmy={activeArmy} armies={armies}/>
+      <MapColumn gameState={prepPhase} activeArmy={activeArmy} armies={armies}/>
+      <MapColumn gameState={prepPhase} activeArmy={activeArmy} armies={armies}/>
+      <MapColumn gameState={prepPhase} activeArmy={activeArmy} armies={armies}/>
+      <MapColumn gameState={prepPhase} activeArmy={activeArmy} armies={armies}/>
+      <MapColumn gameState={prepPhase} activeArmy={activeArmy} armies={armies}/>
     </div>
     <div id="options"></div>
-    <button id="startButton" onClick={props.changePrepPhase}>
-    {props.prepPhase === 0 && `Finalize the map!`}
-    {props.prepPhase === 1 && `Submit your units!`}
-    {props.prepPhase === 2 && `Start the match!`}
+    <button id="startButton" onClick={changePrepPhase}>
+    {prepPhase === 0 && `Finalize the map!`}
+    {prepPhase === 1 && `Submit your units!`}
+    {prepPhase === 2 && `Select your starting positions!`}
+    {prepPhase === 3 && `Start the match!`}
     </button>
   </div>
   )

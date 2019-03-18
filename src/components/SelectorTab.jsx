@@ -3,42 +3,36 @@ import Unit from '../classes/Unit.js';
 import UnitView from './UnitView.jsx';
 
 function SelectorTab(props) {
+  const { prepPhase, recruit, armies, toggleArmy, activeArmy, editArmyMax } = props
   const [armyCount, setArmyCount] = useState(0);
 
-  function handleAdd(event) {
-    let side;
-    let army = document.getElementById('armySelector').value;
-    if (army === '1') {
-      side = 'enemy';
-    } else {
-      side = 'player';
-    }
-    if (props.armies[side].units.length === props.armies[side].max) {
-      alert(`The ${side}'s army already has ${props.armies[side].max} recruit(s).  Please remove a unit to add a new one.`);
+  function handleAdd() {
+    let side = activeArmy === 1 ? 'enemy' : 'player'
+    if (armies[side].units.length === armies[side].max) {
+      alert(`The ${side}'s army already has ${armies[side].max} recruit(s).  Please remove a unit to add a new one.`);
     } else {
       let unit = new Unit();
-      props.recruit(army, unit);
+      recruit(side, unit);
       setArmyCount(armyCount + 1)
     }
   }
 
   function handleSwap(event) {
     let target = event.target;
-    console.log(target.value);
     if (target.value === 'player') {
-      props.toggleArmy(0);
+      toggleArmy(0);
     } else {
-      props.toggleArmy(1);
+      toggleArmy(1);
     }
   }
 
   return(
     <div id="selectorTab">
-      {props.prepPhase === 0 &&
+      {prepPhase === 0 &&
       <div>
       <label htmlFor="playerSize">Select the size of the player's army:</label><br></br>
 
-      <select id="playerSize">
+      <select id="playerSize" name="player" onChange={editArmyMax}>
         <option value={1}>1</option>
         <option value={2}>2</option>
         <option value={3}>3</option>
@@ -48,7 +42,7 @@ function SelectorTab(props) {
       </select><br></br>
       <label htmlFor="enemySize">Select the size of the enemy's army:</label><br></br>
 
-      <select id="enemySize">
+      <select id="enemySize" name="enemy" onChange={editArmyMax}>
         <option value={1}>1</option>
         <option value={2}>2</option>
         <option value={3}>3</option>
@@ -58,7 +52,20 @@ function SelectorTab(props) {
       </select><br></br>
       </div>
       }
-      {props.prepPhase === 1 && 
+      {[1, 2].includes(prepPhase) && 
+        <div>
+          <div>
+            <input type="radio" value="player" name="starter" onChange={handleSwap}/>
+            <label htmlFor="player">Player</label>
+          </div>
+          <div>
+            <input type="radio" value="enemy" name="starter" onChange={handleSwap}/>
+            <label htmlFor="enemy">Enemy</label>
+          </div>
+        </div>
+      }
+
+      {prepPhase === 1 && 
         <div>
         <select id="armySelector">
           <option value={0}>Player</option>
@@ -85,22 +92,10 @@ function SelectorTab(props) {
         <button onClick={handleAdd}>Deploy</button>
         </div>
       }
-      {props.prepPhase === 2 && 
-        <div>
-          <div>
-            <input type="radio" value="player" name="starter" onChange={handleSwap}/>
-            <label htmlFor="player">Player</label>
-          </div>
-          <div>
-            <input type="radio" value="enemy" name="starter" onChange={handleSwap}/>
-            <label htmlFor="enemy">Enemy</label>
-          </div>
-        </div>
-      }
-      {props.armies.player.units.map((each) => {
+      {armies.player.units.map((each) => {
         return <UnitView unit={each} team={'player'}/>
       })}
-      {props.armies.enemy.units.map((each) => {
+      {armies.enemy.units.map((each) => {
         return <UnitView unit={each} team={'enemy'}/>
       })}
     </div>

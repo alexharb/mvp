@@ -7,10 +7,12 @@ function HeroBattle () {
   const initialArmies = {
     player: {
     max: 1,
+    placedUnits: 0, 
     units: []
     }, 
     enemy: {
       max: 1, 
+      placedUnits: 0,
       units:[]
     }
   }
@@ -37,32 +39,39 @@ function HeroBattle () {
   }
 
   useEffect(() => {
-    console.log('hey');
   }, [armies])
 
   function addUnit(team, unit) { //0 is player, 1 is enemy
-    let side;
-    if (team === '1') {
-      side = 'enemy';
-    } else {
-      side = 'player';
-    }
-    let newTeam = armies[side].units
+    let newTeam = armies[team].units
     newTeam.push(unit);
     let newArmies = armies;
-    newArmies[side].units = newTeam;
+    newArmies[team].units = newTeam;
     updateArmies(newArmies);
   }
 
   function toggleArmy(team) {
-    console.log(team);
     changeTurn(team);
+  }
+
+  function editArmyMax(event) {
+    let army = event.target.name;
+    let num = Number(event.target.value);
+    let newArmies = armies;
+    newArmies[army].max = num;
   }
 
   return(
     <div id="main">
-      <SelectorTab prepPhase={prepPhase} recruit={addUnit} armies={armies} toggleArmy={toggleArmy}/>
-      <GameBoard prepPhase={prepPhase} changePrepPhase={changePrepPhase}/>
+      <SelectorTab prepPhase={prepPhase}
+                   recruit={addUnit}
+                   armies={armies}
+                   toggleArmy={toggleArmy}
+                   activeArmy={battleTurn}
+                   editArmyMax={editArmyMax}/>
+      <GameBoard prepPhase={prepPhase} 
+                 changePrepPhase={changePrepPhase} 
+                 activeArmy={battleTurn}
+                 armies={armies}/>
       <InfoTab prepPhase={prepPhase}/>
     </div>
   )

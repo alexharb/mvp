@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
 function GridSquare(props) {
+  const { gameState, activeArmy, armies } = props
   const [terrainType, updateTerrain] = useState(0);
   const [terrainLabel, updateLabel] = useState('land');
   const [isStart, updateStart] = useState(false);
-  const [startValueTeam, updateTeam] = useState('enemy');
+  const [startValueTeam, updateTeam] = useState('');
 
   useEffect(() => {
     if (terrainType === 4) {
@@ -21,14 +22,25 @@ function GridSquare(props) {
   }, [terrainType])
 
   function cycleTerrain(event) {
-    let target = event.target;
-    if (props.gameState === 0) {
+    let army = activeArmy === 1 ? 'enemy' : 'player'
+    if (gameState === 0) {
       updateTerrain((terrainType + 1) % 5);
-    } else if (props.gameState === 2) {
-      if (isStart) {
+    } else if (gameState === 2) {
+      console.log(armies[army].max)
+      if (army === startValueTeam) {
+        updateTeam('');
         updateStart(false);
+        armies[army].placedUnits--;
+      } else if (startValueTeam === '') {
+        if (armies[army].placedUnits < armies[army].max) {
+          armies[army].placedUnits++;
+          updateTeam(army);
+          updateStart(true);
+        } else {
+          alert(`The ${army} army has already placed the maximum number of units`)
+        }
       } else {
-        updateStart(true);
+        alert('You cannot overwrite the other teams starting position')
       }
     }
   }
