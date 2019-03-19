@@ -8,6 +8,7 @@ function SelectorTab(props) {
   const [armyCount, setArmyCount] = useState(0);
   const [selectedWeapon, setWeapon] = useState(0);
   const [selectedColor, setColor] = useState(0);
+  const [selectedMov, setMov] = useState(0);
 
   function handleAdd() {
     let side = activeArmy === 1 ? 'enemy' : 'player'
@@ -15,7 +16,7 @@ function SelectorTab(props) {
       alert(`The ${side}'s army already has ${armies[side].max} recruit(s).  Please remove a unit to add a new one.`);
     } else {
       let weapon = new Weapon(Number(selectedWeapon), Number(selectedColor))
-      let unit = new Unit(weapon);
+      let unit = new Unit(selectedMov, weapon);
       console.log(unit);
       recruit(side, unit);
       setArmyCount(armyCount + 1)
@@ -44,6 +45,11 @@ function SelectorTab(props) {
   function selectColor(event) {
     let color = event.target.value;
     setColor(color);
+  }
+
+  function selectMovement(event) {
+    let mov = event.target.value;
+    setMov(mov);
   }
 
   return(
@@ -88,7 +94,7 @@ function SelectorTab(props) {
       {prepPhase === 1 && 
         <div>
   
-        <select id="movementSelector">
+        <select id="movementSelector" onChange={selectMovement}>
           <option value={0}>Infantry</option>
           <option value={1}>Armor</option>
           <option value={2}>Flying</option>
