@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import tileCheck from '../helpers/tileCheck.js'
+import tilePlaceCheck from '../helpers/helpers.js'
 
 function GridSquare(props) {
   const { gameState, activeArmy, armies, initTerrain, totalMap, column, row } = props
@@ -22,7 +22,6 @@ function GridSquare(props) {
     if (gameState === 0) {
       updateTerrain((terrainType + 1) % 6);
     } else if (gameState === 2) {
-      console.log(armies[army].max)
       if (army === startValueTeam) {
         armies[army].placedUnits--;
         placedUnit.isPlaced = false;
@@ -32,7 +31,7 @@ function GridSquare(props) {
       } else if (startValueTeam === '') {
         if (armies[army].placedUnits < armies[army].max) {
           let unit = makeUnitAbbrev();
-          if (tileCheck(unit, terrainType)) {
+          if (tilePlaceCheck(unit, terrainType)) {
             armies[army].placedUnits++;
             unit.isPlaced = true;
             updateTeam(army);
@@ -48,6 +47,8 @@ function GridSquare(props) {
       } else {
         alert(`You cannot overwrite the other team's starting position`)
       }
+    } else if (gameState === 3) {
+
     }
   }
   

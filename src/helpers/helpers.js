@@ -1,4 +1,4 @@
-function tileCheck(unit, terrain) {
+function tilePlaceCheck(unit, terrain) {
   if (terrain === 3 || terrain === 5) {
     return false;
   } else if (terrain === 2 && unit.type !== 2) {
@@ -10,4 +10,4 @@ function tileCheck(unit, terrain) {
   }
 }
 
-export default tileCheck;
+export default tilePlaceCheck;
