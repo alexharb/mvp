@@ -2,17 +2,18 @@ import React, { useState, useEffect } from 'react';
 import GridSquare from './GridSquare.jsx'
 
 function MapColumn(props) {
-  const { gameState, activeArmy, armies } = props
+  const { gameState, activeArmy, armies, setup, totalMap, column } = props
   return(
     <div className = "column">
-      <GridSquare gameState={gameState} activeArmy={activeArmy} armies={armies}/>
-      <GridSquare gameState={gameState} activeArmy={activeArmy} armies={armies}/>
-      <GridSquare gameState={gameState} activeArmy={activeArmy} armies={armies}/>
-      <GridSquare gameState={gameState} activeArmy={activeArmy} armies={armies}/>
-      <GridSquare gameState={gameState} activeArmy={activeArmy} armies={armies}/>
-      <GridSquare gameState={gameState} activeArmy={activeArmy} armies={armies}/>
-      <GridSquare gameState={gameState} activeArmy={activeArmy} armies={armies}/>
-      <GridSquare gameState={gameState} activeArmy={activeArmy} armies={armies}/>
+    {setup.map((each, index) => {
+      return <GridSquare gameState={gameState} 
+                         activeArmy={activeArmy} 
+                         armies={armies} 
+                         initTerrain={each}
+                         totalMap={totalMap}
+                         column={column}
+                         row={index}/>
+    })}
     </div>
     
   )

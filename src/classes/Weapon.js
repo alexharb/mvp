@@ -3,7 +3,7 @@ var Weapon = function(weapon, color) {
   if (weapon > 2) {
     this.color = color;
   }
-  if (weapon < 2) {
+  if (weapon <= 2) {
     this.range = 1;
     this.damage = 0; //0 is physical, 1 is magical
     this.color = weapon;

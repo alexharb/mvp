@@ -1,6 +1,6 @@
 var Unit = function(mov, weapon) {
   let movement;
-  this.type = mov; //0 is infantry, 1 is armor, 2 is flying, 3 is cavalier
+  this.type = Number(mov); //0 is infantry, 1 is armor, 2 is flying, 3 is cavalier
   if (mov = 1) {
     movement = 1;
   } else if (mov = 3) {

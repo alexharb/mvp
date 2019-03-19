@@ -70,7 +70,11 @@
 
 .trench {
   /* Forests for cavs.  Normal for all other movement types */
-  background-color: rgb(255, 174, 0);
+  background-color: rgb(253, 255, 118);
+}
+
+.ruin {
+  background-color: rgb(100, 53, 0);
 }
 
 .startingPosition {
@@ -78,8 +82,12 @@
   width: 80%;
   border: 1px solid;
   border-radius: 20px;
+}
+
+.startingPosition p {
   text-align: center;
   font-size: 12px;
+
 }
 
 .startingPosition.enemy {
@@ -97,3 +105,20 @@
 .enemy {
   color: red;
 }
+
+.red {
+  color: red;
+}
+
+.blue {
+  color: blue;
+}
+
+.green {
+  color: green;
+}
+
+.colorless {
+  color: gray;
+}
+

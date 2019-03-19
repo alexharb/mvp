@@ -17,7 +17,6 @@ function SelectorTab(props) {
     } else {
       let weapon = new Weapon(Number(selectedWeapon), Number(selectedColor))
       let unit = new Unit(selectedMov, weapon);
-      console.log(unit);
       recruit(side, unit);
       setArmyCount(armyCount + 1)
     }
