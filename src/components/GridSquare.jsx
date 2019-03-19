@@ -49,10 +49,15 @@ function GridSquare(props) {
       }
     } else if (gameState === 3) {
       if (isStart) {
-        if (!isStart) {
-          // turn it off
+        if (placedUnit.isSelected) {
+          let points = document.getElementsByClassName('canMove');
+          while (points.length !== 0) {
+            points[0].remove();
+          }
+          placedUnit.isSelected = false;
         } else {
-          tileMoveCheck(totalMap, column, row, placedUnit, placedUnit.weapon.range, startValueTeam)
+          tileMoveCheck(totalMap, column, row, placedUnit, placedUnit.weapon.range, startValueTeam);
+          placedUnit.isSelected = true;
         }
       }
     }

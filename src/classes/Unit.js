@@ -26,6 +26,7 @@ var Unit = function(mov, weapon) {
   this.cSkill = {};
   this.sSeal = {};
   this.isPlaced = false;
+  this.isSelected = false;
 }
 
 export default Unit;
