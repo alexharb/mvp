@@ -41,8 +41,22 @@ function HeroBattle () {
   useEffect(() => {
   }, [armies])
 
+  function armyUnitCount(element, label) {
+    
+  }
+
   function addUnit(team, unit) { //0 is player, 1 is enemy
     let newTeam = armies[team].units
+    let movType = ['Infantry', 'Armor', 'Flying', 'Cavalier']
+    let weapType=['Sword', 'Lance', 'Axe', 'Red Magic', 'Blue Magic', 'Green Magic', 'Dagger', 'Bow', 'Dragon']
+    let title = `${movType[unit.type]} ${weapType[unit.weapon.type]}`
+    let labelNum = 1;
+    newTeam.forEach((each) => {
+      if (each.title.includes(title)) {
+        labelNum++;
+      }
+    });
+    unit.title = `${title} ${labelNum}`
     newTeam.push(unit);
     let newArmies = armies;
     newArmies[team].units = newTeam;

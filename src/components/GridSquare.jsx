@@ -6,6 +6,7 @@ function GridSquare(props) {
   const [terrainLabel, updateLabel] = useState('land');
   const [isStart, updateStart] = useState(false);
   const [startValueTeam, updateTeam] = useState('');
+  const [placedUnit, updateUnit] = useState({});
 
   useEffect(() => {
     if (terrainType === 4) {
@@ -31,24 +32,52 @@ function GridSquare(props) {
         updateTeam('');
         updateStart(false);
         armies[army].placedUnits--;
+        placedUnit.isPlaced = false;
       } else if (startValueTeam === '') {
         if (armies[army].placedUnits < armies[army].max) {
           armies[army].placedUnits++;
           updateTeam(army);
           updateStart(true);
+          let unit = makeUnitAbbrev();
+          unit.isPlaced = true;
+          updateUnit(unit);
         } else {
           alert(`The ${army} army has already placed the maximum number of units`)
         }
       } else {
-        alert('You cannot overwrite the other teams starting position')
+        alert(`You cannot overwrite the other team's starting position`)
       }
     }
+  }
+  
+  function makeUnitAbbrev() {
+    let army = activeArmy === 1 ? 'enemy' : 'player';
+    army = armies[army].units
+    let string = '';
+    let unit;
+    army.forEach((each) => {
+      console.log(each);
+      if (!each.isPlaced && string === '') {
+        unit = each;
+        let title = each.title
+        title = title.split(' ');
+        console.log(title);
+        title = title.map((each) => {
+          return each.substring(0, 1);
+        });
+        title = title.join('');
+        string = title
+      }
+    })
+    unit.smallTitle = string;
+    return unit;
   }
 
   return(
     <div className={`square ${terrainLabel}`} onClick={cycleTerrain}>
     {isStart && 
       <div className={`startingPosition ${startValueTeam}`}>
+        {placedUnit.smallTitle}
       </div>
     }
     </div>

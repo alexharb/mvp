@@ -1,4 +1,5 @@
 var Unit = function() {
+  this.title = '',
   this.type = 0, //0 is infantry, 1 is armor, 2 is flying, 3 is cavalier
   this.stats = {
     HP: 1,
@@ -11,7 +12,7 @@ var Unit = function() {
   this.color = {};
   this.weapon = {
     range: 1,
-    type: 0, //0 is melee, 1 is magic, 2 is bow, 3 is shuriken, 4 is beast, 5 is dragon
+    type: 0, 
   };
   this.assist = {};
   this.special = {};
@@ -19,6 +20,7 @@ var Unit = function() {
   this.bSkill = {};
   this.cSkill = {};
   this.sSeal = {};
+  this.isPlaced = false;
 }
 
 export default Unit;

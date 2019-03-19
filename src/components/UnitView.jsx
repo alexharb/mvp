@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
 function UnitView(props) {
+  const { unit, team } = props;
+
   return(
-    <div className="unitView">
+    <div className={`unitView ${team}`}>
       <p>
-        HP: {props.unit.stats.HP}
+        {unit.title}
       </p>
     </div>
   )

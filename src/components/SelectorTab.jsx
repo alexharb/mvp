@@ -83,11 +83,12 @@ function SelectorTab(props) {
           <option value={0}>Sword</option>
           <option value={1}>Lance</option>
           <option value={2}>Axe</option>
-          <option value={3}>Bow</option>
-          <option value={4}>Dagger</option>
-          <option value={5}>Red Magic</option>
-          <option value={6}>Blue Magic</option>
-          <option value={7}>Green Magic</option>
+          <option value={3}>Red Magic</option>
+          <option value={4}>Blue Magic</option>
+          <option value={5}>Green Magic</option>
+          <option value={6}>Dagger</option>
+          <option value={7}>Bow</option>
+          <option value={8}>Dragon</option>
         </select><br></br>
         <button onClick={handleAdd}>Deploy</button>
         </div>

@@ -4,11 +4,6 @@ import MapColumn from './MapColumn.jsx';
 
 function GameBoard(props) {
   const { prepPhase, changePrepPhase, activeArmy, armies } = props
-  const [gameState, setGame] = useState(false)
-
-  function startGame() {
-    setGame(true);
-  }
 
   return(
   <div id="gameBoard">

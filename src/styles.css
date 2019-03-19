@@ -78,6 +78,7 @@
   width: 80%;
   border: 1px solid;
   border-radius: 20px;
+  text-align: center;
 }
 
 .startingPosition.enemy {
@@ -86,4 +87,12 @@
 
 .startingPosition.player {
   border-color: blue;
+}
+
+.player {
+  color: blue;
+}
+
+.enemy {
+  color: red;
 }
