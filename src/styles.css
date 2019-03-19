@@ -39,6 +39,8 @@
 }
 
 .square {
+  position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -96,6 +98,14 @@
 
 .startingPosition.player {
   border-color: blue;
+}
+
+.canMove {
+  background-color: rgba(0, 255, 234, 0.479);
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 200;
 }
 
 .player {

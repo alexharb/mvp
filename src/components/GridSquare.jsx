@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import tilePlaceCheck from '../helpers/helpers.js'
+import { tileMoveCheck, tilePlaceCheck } from '../helpers/helpers.js'
 
 function GridSquare(props) {
   const { gameState, activeArmy, armies, initTerrain, totalMap, column, row } = props
@@ -48,7 +48,13 @@ function GridSquare(props) {
         alert(`You cannot overwrite the other team's starting position`)
       }
     } else if (gameState === 3) {
-
+      if (isStart) {
+        if (!isStart) {
+          // turn it off
+        } else {
+          tileMoveCheck(totalMap, column, row, placedUnit, placedUnit.weapon.range, startValueTeam)
+        }
+      }
     }
   }
   
