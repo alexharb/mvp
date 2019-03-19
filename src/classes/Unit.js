@@ -1,4 +1,4 @@
-var Unit = function() {
+var Unit = function(weapon) {
   this.title = '',
   this.type = 0, //0 is infantry, 1 is armor, 2 is flying, 3 is cavalier
   this.stats = {
@@ -9,11 +9,7 @@ var Unit = function() {
     Res: 1,
     Mov: 1,
   };
-  this.color = {};
-  this.weapon = {
-    range: 1,
-    type: 0, 
-  };
+  this.weapon = weapon;
   this.assist = {};
   this.special = {};
   this.aSkill = {};

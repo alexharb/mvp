@@ -31,8 +31,7 @@ function HeroBattle () {
   function changePrepPhase() {
     //0 - determine army sizes/ creating map/ show map info
     //1 - choose units/ // show unit info
-    //2 - Select your units
-    //3 - place enemy units
+    //2 - place units
     if (prepPhase < 4) {
       updatePrep(prepPhase + 1)
     }
@@ -48,8 +47,9 @@ function HeroBattle () {
   function addUnit(team, unit) { //0 is player, 1 is enemy
     let newTeam = armies[team].units
     let movType = ['Infantry', 'Armor', 'Flying', 'Cavalier']
-    let weapType=['Sword', 'Lance', 'Axe', 'Red Magic', 'Blue Magic', 'Green Magic', 'Dagger', 'Bow', 'Dragon']
-    let title = `${movType[unit.type]} ${weapType[unit.weapon.type]}`
+    let weapType=['Sword', 'Lance', 'Axe', 'Magic', 'Dagger', 'Bow', 'Dragon'];
+    let weapColor=['Red', 'Blue', 'Green', 'Colorless']
+    let title = `${movType[unit.type]} ${unit.weapon.type > 2 ? weapColor[unit.weapon.color] : ''} ${weapType[unit.weapon.type]}`
     let labelNum = 1;
     newTeam.forEach((each) => {
       if (each.title.includes(title)) {

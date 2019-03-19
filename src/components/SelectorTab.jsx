@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import Unit from '../classes/Unit.js';
+import Weapon from '../classes/Weapon.js'
 import UnitView from './UnitView.jsx';
 
 function SelectorTab(props) {
   const { prepPhase, recruit, armies, toggleArmy, activeArmy, editArmyMax } = props
   const [armyCount, setArmyCount] = useState(0);
+  const [selectedWeapon, setWeapon] = useState(0);
+  const [selectedColor, setColor] = useState(0);
 
   function handleAdd() {
     let side = activeArmy === 1 ? 'enemy' : 'player'
     if (armies[side].units.length === armies[side].max) {
       alert(`The ${side}'s army already has ${armies[side].max} recruit(s).  Please remove a unit to add a new one.`);
     } else {
-      let unit = new Unit();
+      let weapon = new Weapon(Number(selectedWeapon), Number(selectedColor))
+      let unit = new Unit(weapon);
+      console.log(unit);
       recruit(side, unit);
       setArmyCount(armyCount + 1)
     }
@@ -24,6 +29,21 @@ function SelectorTab(props) {
     } else {
       toggleArmy(1);
     }
+  }
+
+  function selectWeapon(event) {
+    let weapon = event.target.value
+    if (weapon < 2) {
+      setWeapon(weapon);
+      setColor(weapon);
+    } else {
+      setWeapon(weapon);
+    }
+  }
+
+  function selectColor(event) {
+    let color = event.target.value;
+    setColor(color);
   }
 
   return(
@@ -67,10 +87,6 @@ function SelectorTab(props) {
 
       {prepPhase === 1 && 
         <div>
-        <select id="armySelector">
-          <option value={0}>Player</option>
-          <option value={1}>Enemy</option>
-        </select><br></br>
   
         <select id="movementSelector">
           <option value={0}>Infantry</option>
@@ -79,17 +95,25 @@ function SelectorTab(props) {
           <option value={3}>Cavalier</option>
         </select><br></br>
   
-        <select id="weaponSelector">
+        <select id="weaponSelector" onChange={selectWeapon}>
           <option value={0}>Sword</option>
           <option value={1}>Lance</option>
           <option value={2}>Axe</option>
-          <option value={3}>Red Magic</option>
-          <option value={4}>Blue Magic</option>
-          <option value={5}>Green Magic</option>
-          <option value={6}>Dagger</option>
-          <option value={7}>Bow</option>
-          <option value={8}>Dragon</option>
+          <option value={3}>Magic</option>
+          <option value={4}>Dagger</option>
+          <option value={5}>Bow</option>
+          <option value={6}>Dragon</option>
         </select><br></br>
+        {selectedWeapon > 2 &&
+        <select id="colorSelector" onChange={selectColor}>
+          <option value={0}>Red</option>
+          <option value={1}>Blue</option>
+          <option value={2}>Green</option>
+          {selectedWeapon > 3 &&
+            <option value={3}>Colorless</option>
+          }
+        </select>
+        }<br></br>
         <button onClick={handleAdd}>Deploy</button>
         </div>
       }
