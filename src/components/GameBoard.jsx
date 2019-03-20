@@ -3,8 +3,9 @@ import MapColumn from './MapColumn.jsx';
 
 
 function GameBoard(props) {
-  const { prepPhase, changePrepPhase, activeArmy, armies, setup } = props
+  const { prepPhase, changePrepPhase, activeArmy, armies, setup, mapDispatch } = props
   const army = activeArmy === 1 ? 'enemy' : 'player';
+  console.log(setup);
 
   return(
   <div id="gameBoard">
@@ -15,7 +16,8 @@ function GameBoard(props) {
                         armies={armies} 
                         setup={each} 
                         totalMap={setup}
-                        column={index}/>
+                        column={index}
+                        mapDispatch={mapDispatch}/>
     })}
     </div>
     <div id="options"></div>

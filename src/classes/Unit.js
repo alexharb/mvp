@@ -27,6 +27,7 @@ var Unit = function(mov, weapon) {
   this.sSeal = {};
   this.isPlaced = false;
   this.isSelected = false;
+  this.team = 0;
 }
 
 export default Unit;

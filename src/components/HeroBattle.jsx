@@ -17,20 +17,45 @@ function HeroBattle () {
     }
   }
 
-  const initialMap = [
+  let initialMap = [
     [1, 0, 4, 0, 0, 0, 0, 1],
     [0, 0, 4, 1, 0, 3, 0, 0],
     [0, 0, 0, 2, 2, 1, 0, 0],
     [0, 0, 1, 2, 2, 0, 0, 1],
     [1, 0, 5, 0, 4, 0, 0, 0],
     [1, 0, 3, 0, 0, 3, 0, 1],
-  ]
+  ].map((each) => {
+    return each.map((each2) => {
+      return {terrain: each2,
+              hasUnit: false,
+              unitPlaced: {}
+              }
+    })
+  });
+
+  function mapUpdate(state, action) {
+    let oldMap = state;
+    let column = action.column;
+    let row = action.row;
+    switch (action.type) {
+      case 'terrain':
+        let terrain = action.terrain;
+        oldMap[column][row].terrain = terrain;
+        return oldMap;
+      case 'placeUnit':
+
+      case 'moveUnit':
+
+      default:
+    }
+  }
 
   const [prepPhase, updatePrep] = useState(0);
   const [battleTurn, changeTurn] = useState(0); //0 is player phase, 1 is enemy phase
   const [turnCount, setCount] = useState(0);
   const [armies, updateArmies] = useState(initialArmies);
-  const [layout, updateLayout] = useState(initialMap);
+  // const [layout, updateLayout] = useState(initialMap);
+  const [layout, mapDispatch] = useReducer(mapUpdate, initialMap);
 
   useEffect(() => {
     if (battleTurn === 1) {
@@ -82,6 +107,12 @@ function HeroBattle () {
     newArmies[army].max = num;
   }
 
+  function updateMap(column, row, value) {
+    let newMap = layout;
+    newMap[column][row].terrain = value;
+    updateLayout(newMap);
+  }
+
   return(
     <div id="main">
       <SelectorTab prepPhase={prepPhase}
@@ -94,7 +125,8 @@ function HeroBattle () {
                  changePrepPhase={changePrepPhase} 
                  activeArmy={battleTurn}
                  armies={armies}
-                 setup={initialMap}/>
+                 setup={layout}
+                 mapDispatch={mapDispatch}/>
       <InfoTab prepPhase={prepPhase}/>
     </div>
   )

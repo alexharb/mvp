@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { tileMoveCheck, tilePlaceCheck } from '../helpers/helpers.js'
+import { tileMoveCheck, tilePlaceCheck, isMovementTileCheck } from '../helpers/helpers.js'
 
 function GridSquare(props) {
-  const { gameState, activeArmy, armies, initTerrain, totalMap, column, row } = props
+  const { gameState, activeArmy, armies, initTerrain, totalMap, column, row, mapDispatch } = props
   
   const [terrainType, updateTerrain] = useState(initTerrain);
   const [terrainLabel, updateLabel] = useState('land');
@@ -13,8 +13,16 @@ function GridSquare(props) {
 
   useEffect(() => {
     let terrains = ['land', 'forest', 'water', 'wall', 'trench', 'ruin']
+    let action = {
+      type: 'terrain',
+      column: column,
+      row: row,
+      terrain: terrainType
+    }
+    mapDispatch(action)
     updateLabel(terrains[terrainType])
   }, [terrainType])
+
 
   function cycleTerrain(event) {
     let army = activeArmy === 1 ? 'enemy' : 'player'
@@ -58,6 +66,10 @@ function GridSquare(props) {
         } else {
           tileMoveCheck(totalMap, column, row, placedUnit, placedUnit.weapon.range, startValueTeam);
           placedUnit.isSelected = true;
+        }
+      } else {
+        if (isMovementTileCheck(column, row)) {
+
         }
       }
     }
