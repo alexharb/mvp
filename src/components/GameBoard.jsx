@@ -5,7 +5,10 @@ import MapColumn from './MapColumn.jsx';
 function GameBoard(props) {
   const { prepPhase, changePrepPhase, activeArmy, armies, setup, mapDispatch } = props
   const army = activeArmy === 1 ? 'enemy' : 'player';
-  console.log(setup);
+
+  function stringToUpperCase(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
 
   return(
   <div id="gameBoard">
@@ -21,6 +24,7 @@ function GameBoard(props) {
     })}
     </div>
     <div id="options"></div>
+    {stringToUpperCase(army)}'s phase
     <button id="startButton" onClick={changePrepPhase}>
     {prepPhase === 0 && `Finalize the map!`}
     {prepPhase === 1 && `Submit your units!`}

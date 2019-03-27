@@ -9,6 +9,8 @@ function SelectorTab(props) {
   const [selectedWeapon, setWeapon] = useState(0);
   const [selectedColor, setColor] = useState(0);
   const [selectedMov, setMov] = useState(0);
+  let playerChecked = activeArmy === 1 ? false : true;
+  let enemyChecked = !playerChecked;
 
   function handleAdd() {
     let side = activeArmy === 1 ? 'enemy' : 'player'
@@ -80,11 +82,19 @@ function SelectorTab(props) {
       {[1, 2].includes(prepPhase) && 
         <div>
           <div>
-            <input type="radio" value="player" name="starter" onChange={handleSwap}/>
+            <input type="radio" 
+                   value="player" 
+                   name="starter" 
+                   onChange={handleSwap} 
+                   checked={playerChecked}/>
             <label htmlFor="player">Player</label>
           </div>
           <div>
-            <input type="radio" value="enemy" name="starter" onChange={handleSwap}/>
+            <input type="radio" 
+                   value="enemy"
+                   name="starter" 
+                   onChange={handleSwap}
+                   checked={enemyChecked}/>
             <label htmlFor="enemy">Enemy</label>
           </div>
         </div>

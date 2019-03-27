@@ -55,6 +55,7 @@ function HeroBattle () {
   const [turnCount, setCount] = useState(0);
   const [armies, updateArmies] = useState(initialArmies);
   const [layout, mapDispatch] = useReducer(mapUpdate, initialMap);
+  const [battleStart, updateStart] = useState(false);
 
   useEffect(() => {
     if (battleTurn === 1) {
@@ -66,10 +67,16 @@ function HeroBattle () {
     //0 - determine army sizes/ creating map/ show map info
     //1 - choose units/ // show unit info
     //2 - place units
+    // debugger;
     if (prepPhase < 3) {
       updatePrep(prepPhase + 1)
+      changeTurn(0);
+      if (prepPhase === 2) {
+        updateStart(true);
+      }
     } else {
-      changeTurn((battleTurn + 1) % 2)
+      let newArmy = battleTurn === 1 ? 0 : 1;
+      changeTurn(newArmy);
     }
   }
 

@@ -12,7 +12,7 @@ function GridSquare(props) {
   const [placedColor, updateColor] = useState('red');
 
   useEffect(() => {
-    let terrains = ['land', 'forest', 'water', 'wall', 'trench', 'ruin']
+    let terrains = ['land', 'forest', 'water', 'wall', 'trench', 'ruin'];
     let action = {
       type: 'terrain',
       column: column,
