@@ -54,7 +54,6 @@ function HeroBattle () {
   const [battleTurn, changeTurn] = useState(0); //0 is player phase, 1 is enemy phase
   const [turnCount, setCount] = useState(0);
   const [armies, updateArmies] = useState(initialArmies);
-  // const [layout, updateLayout] = useState(initialMap);
   const [layout, mapDispatch] = useReducer(mapUpdate, initialMap);
 
   useEffect(() => {
@@ -78,10 +77,10 @@ function HeroBattle () {
   }, [armies])
 
   function addUnit(team, unit) { //0 is player, 1 is enemy
-    let newTeam = armies[team].units
-    let movType = ['Infantry', 'Armor', 'Flying', 'Cavalier']
+    let newTeam = armies[team].units;
+    let movType = ['Infantry', 'Armor', 'Flying', 'Cavalier'];
     let weapType=['Sword', 'Lance', 'Axe', 'Magic', 'Dagger', 'Bow', 'Dragon'];
-    let weapColor=['Red', 'Blue', 'Green', 'Colorless']
+    let weapColor=['Red', 'Blue', 'Green', 'Colorless'];
     let title = `${movType[unit.type]} ${unit.weapon.type > 2 ? weapColor[unit.weapon.color] : ''} ${weapType[unit.weapon.type]}`
     let labelNum = 1;
     newTeam.forEach((each) => {
@@ -89,7 +88,7 @@ function HeroBattle () {
         labelNum++;
       }
     });
-    unit.title = `${title} ${labelNum}`
+    unit.title = `${title} ${labelNum}`;
     newTeam.push(unit);
     let newArmies = armies;
     newArmies[team].units = newTeam;
@@ -105,12 +104,6 @@ function HeroBattle () {
     let num = Number(event.target.value);
     let newArmies = armies;
     newArmies[army].max = num;
-  }
-
-  function updateMap(column, row, value) {
-    let newMap = layout;
-    newMap[column][row].terrain = value;
-    updateLayout(newMap);
   }
 
   return(
