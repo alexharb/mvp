@@ -24,7 +24,7 @@ function checkTileLegality(terrain, unit, mov) {
              || (mov === 2 && unit.type === 3 && terrain === 4)) {
     legal = true;
     unit.stats.mov = 0;
-  } else if ((unit.type === 0 && terrain === 1) || (unit.type === 3 && terrain === 4)) {
+  } else if ((unit.type === 0 && terrain === 1 && mov < 1) || (unit.type === 3 && terrain === 4)) {
     legal = false
   } else {
     legal = true;
@@ -32,7 +32,8 @@ function checkTileLegality(terrain, unit, mov) {
   return legal;
 }
 
-function tileMoveCheck(grid, column, row, unit, range, team) {
+function tileMoveCheck(grid, column, row, unit, team, dispatch) {
+  const { range } = unit
   let element = document.getElementsByClassName(`col${column} row${row}`)[0];
   let mov = unit.stats.mov;
   if (column < 0 || column >= grid.length || row < 0 || row >= grid[0].length || mov < -1) {
@@ -42,39 +43,42 @@ function tileMoveCheck(grid, column, row, unit, range, team) {
     // node.classList.toggle('canAttack');
     // element.appendChild(node);
   } else {
+    let tile = grid[column][row];
     let canMove = false;
-    let terrain = grid[column][row].terrain
+    let terrain = grid[column][row].terrain;
     if (element.children.length > 0) {
-      if (element.children[0].classList.contains(`${team}`) && element.children.length === 1) {
+      if (element.children[0].classList.contains(`${team}`) && !tile.canMove) {
         canMove = checkTileLegality(terrain, unit, mov);
       }
     } else if (mov >= 0) {
-      canMove = checkTileLegality(terrain, unit, mov)
+      canMove = checkTileLegality(terrain, unit, mov);
     }
     if (canMove) {
-      let node = document.createElement('div');
-      node.classList.toggle('canMove');
-      element.appendChild(node);
+      // let node = document.createElement('div');
+      // node.classList.toggle('canMove');
+      // element.appendChild(node);
+      const action = {column: column, row: row, type: 'canMove'}
+      dispatch(action)
       unit.stats.mov--;
-      tileMoveCheck(grid, column + 1, row, unit, range, team);
-      tileMoveCheck(grid, column, row + 1, unit, range, team);
-      tileMoveCheck(grid, column - 1, row, unit, range, team);
-      tileMoveCheck(grid, column, row - 1, unit, range, team);
+      tileMoveCheck(grid, column + 1, row, unit, team, dispatch);
+      tileMoveCheck(grid, column, row + 1, unit, team, dispatch);
+      tileMoveCheck(grid, column - 1, row, unit, team, dispatch);
+      tileMoveCheck(grid, column, row - 1, unit, team, dispatch);
       unit.stats.mov = mov;
     }
   }
 }
 
-function isMovementTileCheck(column, row) {
-  let element = document.getElementsByClassName(`col${column} row${row}`)[0];
-  return Array.from(element.children).reduce((value, each) => {
-    if (each.classList.contains('canMove')) {
-      return true;
-    } else {
-      return value;
-    }
-  }, false)
+function removeTileMoveCheck(grid, dispatch) {
+  grid.forEach((each, column) => {
+    each.forEach((each2, row) => {
+      if (each2.canMove) {
+        const action = {column: column, row: row, type: 'removeMove'}
+        dispatch(action);
+      }
+    })
+  })
 }
 
-export { tilePlaceCheck, tileMoveCheck, isMovementTileCheck };
+export { tilePlaceCheck, tileMoveCheck, removeTileMoveCheck };
   

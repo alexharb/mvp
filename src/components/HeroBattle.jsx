@@ -28,24 +28,38 @@ function HeroBattle () {
     return each.map((each2) => {
       return {terrain: each2,
               hasUnit: false,
-              unitPlaced: {}
-              }
+              unitPlaced: {},
+              canMove: false,
+              isStarter: false}
     })
   });
 
   function mapUpdate(state, action) {
     let oldMap = state;
-    let column = action.column;
-    let row = action.row;
-    switch (action.type) {
+    const { column, row, type, terrain, unit } = action;
+    switch (type) {
       case 'terrain':
-        let terrain = action.terrain;
         oldMap[column][row].terrain = terrain;
         return oldMap;
       case 'placeUnit':
 
       case 'moveUnit':
-
+        oldMap[unit.column][unit.row].isStarter = false;
+        oldMap[unit.column][unit.row].unitPlaced = {};
+        unit.column = column;
+        unit.row = row;
+        oldMap[column][row].unitPlaced = unit;
+        oldMap[column][row].isStarter = true;
+        console.log(oldMap);
+        return oldMap;
+      case 'canMove':
+        oldMap[column][row].canMove = true;
+        return oldMap;
+        // console.log('newMap');
+        // return newMap;
+      case 'removeMove':
+        oldMap[column][row].canMove = false;
+        return oldMap;
       default:
     }
   }
@@ -56,6 +70,7 @@ function HeroBattle () {
   const [armies, updateArmies] = useState(initialArmies);
   const [layout, mapDispatch] = useReducer(mapUpdate, initialMap);
   const [battleStart, updateStart] = useState(false);
+  const [turnPhase, updateTurnPhase] = useState(0) //0 is needs to select, 1 is selected, ready to move, 2 is attacking
 
   useEffect(() => {
     if (battleTurn === 1) {
@@ -67,7 +82,6 @@ function HeroBattle () {
     //0 - determine army sizes/ creating map/ show map info
     //1 - choose units/ // show unit info
     //2 - place units
-    // debugger;
     if (prepPhase < 3) {
       updatePrep(prepPhase + 1)
       changeTurn(0);
@@ -78,17 +92,28 @@ function HeroBattle () {
       let newArmy = battleTurn === 1 ? 0 : 1;
       changeTurn(newArmy);
     }
-  }
+  };
 
-  useEffect(() => {
-  }, [armies])
+  function changeTurnPhase(type) {
+    switch(type) {
+      case 'move':
+        updateTurnPhase('move');
+        return;
+      case 'attack':
+        updateTurnPhase('attack');
+        return;
+      default:
+        updateTurnPhase('default');
+        return;
+    }
+  }
 
   function addUnit(team, unit) { //0 is player, 1 is enemy
     let newTeam = armies[team].units;
     let movType = ['Infantry', 'Armor', 'Flying', 'Cavalier'];
     let weapType=['Sword', 'Lance', 'Axe', 'Magic', 'Dagger', 'Bow', 'Dragon'];
     let weapColor=['Red', 'Blue', 'Green', 'Colorless'];
-    let title = `${movType[unit.type]} ${unit.weapon.type > 2 ? weapColor[unit.weapon.color] : ''} ${weapType[unit.weapon.type]}`
+    let title = `${movType[unit.type]} ${unit.weapon.type > 2 ? weapColor[unit.weapon.color] : ''} ${weapType[unit.weapon.type]}`;
     let labelNum = 1;
     newTeam.forEach((each) => {
       if (each.title.includes(title)) {
@@ -126,7 +151,8 @@ function HeroBattle () {
                  activeArmy={battleTurn}
                  armies={armies}
                  setup={layout}
-                 mapDispatch={mapDispatch}/>
+                 mapDispatch={mapDispatch}
+                 changeTurnPhase={changeTurnPhase}/>
       <InfoTab prepPhase={prepPhase}/>
     </div>
   )

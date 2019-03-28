@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { tileMoveCheck, tilePlaceCheck, isMovementTileCheck } from '../helpers/helpers.js'
+import { tileMoveCheck, tilePlaceCheck, removeTileMoveCheck } from '../helpers/helpers.js'
 
 function GridSquare(props) {
-  const { gameState, activeArmy, armies, initTerrain, totalMap, column, row, mapDispatch } = props
+  const { gameState, activeArmy, armies, totalMap, column, row, mapDispatch, gridData, changeTurnPhase } = props;
+  const { terrain, unitPlaced, canMove, isStarter } = gridData;
+  const army = activeArmy === 1 ? 'enemy' : 'player';
+  const colorArray = ['red', 'blue', 'green', 'colorless'];
   
-  const [terrainType, updateTerrain] = useState(initTerrain);
+  const [terrainType, updateTerrain] = useState(terrain);
   const [terrainLabel, updateLabel] = useState('land');
-  const [isStart, updateStart] = useState(false);
+  const [isStart, updateStart] = useState(isStarter);
   const [startValueTeam, updateTeam] = useState('');
-  const [placedUnit, updateUnit] = useState({});
+  const [placedUnit, updateUnit] = useState(unitPlaced);
   const [placedColor, updateColor] = useState('red');
 
   useEffect(() => {
@@ -18,22 +21,28 @@ function GridSquare(props) {
       column: column,
       row: row,
       terrain: terrainType
-    }
-    mapDispatch(action)
-    updateLabel(terrains[terrainType])
-  }, [terrainType])
+    };
+    mapDispatch(action);
+    updateLabel(terrains[terrainType]);
+  }, [terrainType]);
+
+  function putUnitOnSquare(unit) {
+    unit.isPlaced = true;
+    updateTeam(army);
+    updateStart(true);
+    updateColor(colorArray[unit.weapon.color]);
+    updateUnit(unit);
+  }
 
 
-  function cycleTerrain(event) {
-    let army = activeArmy === 1 ? 'enemy' : 'player'
-    let colorArray = ['red', 'blue', 'green', 'colorless']
+  function cycleTerrain() {
     if (gameState === 0) {
       updateTerrain((terrainType + 1) % 6);
     } else if (gameState === 2) {
       if (army === startValueTeam) {
         armies[army].placedUnits--;
         placedUnit.isPlaced = false;
-        updateColor(colorArray[placedUnit.type])
+        updateColor(colorArray[placedUnit.type]);
         updateTeam('');
         updateStart(false);
       } else if (startValueTeam === '') {
@@ -41,35 +50,41 @@ function GridSquare(props) {
           let unit = makeUnitAbbrev();
           if (tilePlaceCheck(unit, terrainType)) {
             armies[army].placedUnits++;
-            unit.isPlaced = true;
-            updateTeam(army);
-            updateStart(true);
-            updateColor(colorArray[unit.weapon.color]);
-            updateUnit(unit);
+            putUnitOnSquare(unit);
           } else {
-            alert(`This unit type cannot enter this tile.  Please place elsewhere`)
+            alert(`This unit type cannot enter this tile.  Please place elsewhere`);
           }
         } else {
-          alert(`The ${army} army has already placed the maximum number of units`)
+          alert(`The ${army} army has already placed the maximum number of units`);
         }
       } else {
-        alert(`You cannot overwrite the other team's starting position`)
+        alert(`You cannot overwrite the other team's starting position`);
       }
     } else if (gameState === 3) {
       if (isStart) {
         if (placedUnit.isSelected) {
-          let points = document.getElementsByClassName('canMove');
-          while (points.length !== 0) {
-            points[0].remove();
-          }
+          removeTileMoveCheck(totalMap, mapDispatch)
           placedUnit.isSelected = false;
+          changeTurnPhase();
         } else {
-          tileMoveCheck(totalMap, column, row, placedUnit, placedUnit.weapon.range, startValueTeam);
+          tileMoveCheck(totalMap, column, row, placedUnit, startValueTeam, mapDispatch);
+          changeTurnPhase('move');
           placedUnit.isSelected = true;
+          placedUnit.column = column;
+          placedUnit.row = row;
         }
       } else {
-        if (isMovementTileCheck(column, row)) {
-
+        if (canMove) {
+          let mover;
+          armies[army].units.forEach((each) => {
+            if (each.isSelected) {
+              mover = each
+            }
+          });
+          removeTileMoveCheck(totalMap, mapDispatch);
+          putUnitOnSquare(mover);
+          mapDispatch({column: column, row: row, unit: mover, type: 'moveUnit'});
+          changeTurnPhase();
         }
       }
     }
@@ -96,7 +111,7 @@ function GridSquare(props) {
         title = title.join('');
         string = title;
       }
-    })
+    });
     unit.smallTitle = string;
     return unit;
   }
@@ -110,6 +125,8 @@ function GridSquare(props) {
         </p>
       </div>
     }
+    {canMove && 
+    <div className="canMove"></div>}
     </div>
   )
 }
