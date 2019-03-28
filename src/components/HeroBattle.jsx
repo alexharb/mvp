@@ -30,35 +30,48 @@ function HeroBattle () {
               hasUnit: false,
               unitPlaced: {},
               canMove: false,
-              isStarter: false}
-    })
+              isStarter: false,
+              team: '',
+              placedColor: '',}
+            })
   });
 
   function mapUpdate(state, action) {
     let oldMap = state;
-    const { column, row, type, terrain, unit } = action;
+    const { column, row, type, terrain, unit, army, color } = action;
+    let tile = column !== undefined ? oldMap[column][row] : {};
     switch (type) {
       case 'terrain':
-        oldMap[column][row].terrain = terrain;
+        tile.terrain = terrain;
+        return oldMap;
+      case 'removeUnit':
+        tile.isStarter = false;
+        tile.team = army;
+        tile.placedColor = color;
+        tile.unitPlaced = {};
         return oldMap;
       case 'placeUnit':
-
+        tile.isStarter = true;
+        tile.team = army;
+        tile.placedColor = color;
+        tile.unitPlaced = unit;
+        return oldMap;
       case 'moveUnit':
         oldMap[unit.column][unit.row].isStarter = false;
         oldMap[unit.column][unit.row].unitPlaced = {};
         unit.column = column;
         unit.row = row;
-        oldMap[column][row].unitPlaced = unit;
-        oldMap[column][row].isStarter = true;
-        console.log(oldMap);
+        unit.isSelected = false;
+        tile.unitPlaced = unit;
+        tile.isStarter = true;
         return oldMap;
       case 'canMove':
-        oldMap[column][row].canMove = true;
+        tile.canMove = true;
         return oldMap;
         // console.log('newMap');
         // return newMap;
       case 'removeMove':
-        oldMap[column][row].canMove = false;
+        tile.canMove = false;
         return oldMap;
       default:
     }
@@ -103,7 +116,8 @@ function HeroBattle () {
         updateTurnPhase('attack');
         return;
       default:
-        updateTurnPhase('default');
+        const newValue = turnPhase === 'default' ? 'default2' : 'default';
+        updateTurnPhase(newValue);
         return;
     }
   }

@@ -3,16 +3,12 @@ import { tileMoveCheck, tilePlaceCheck, removeTileMoveCheck } from '../helpers/h
 
 function GridSquare(props) {
   const { gameState, activeArmy, armies, totalMap, column, row, mapDispatch, gridData, changeTurnPhase } = props;
-  const { terrain, unitPlaced, canMove, isStarter } = gridData;
+  const { terrain, unitPlaced, canMove, isStarter, team, placedColor, hasUnit } = gridData;
   const army = activeArmy === 1 ? 'enemy' : 'player';
   const colorArray = ['red', 'blue', 'green', 'colorless'];
   
   const [terrainType, updateTerrain] = useState(terrain);
   const [terrainLabel, updateLabel] = useState('land');
-  const [isStart, updateStart] = useState(isStarter);
-  const [startValueTeam, updateTeam] = useState('');
-  const [placedUnit, updateUnit] = useState(unitPlaced);
-  const [placedColor, updateColor] = useState('red');
 
   useEffect(() => {
     let terrains = ['land', 'forest', 'water', 'wall', 'trench', 'ruin'];
@@ -28,10 +24,12 @@ function GridSquare(props) {
 
   function putUnitOnSquare(unit) {
     unit.isPlaced = true;
-    updateTeam(army);
-    updateStart(true);
-    updateColor(colorArray[unit.weapon.color]);
-    updateUnit(unit);
+    mapDispatch({column: column,
+       row: row,
+       army: army,
+       color: colorArray[unit.weapon.color], 
+       unit: unit, 
+       type: 'placeUnit'});
   }
 
 
@@ -39,18 +37,18 @@ function GridSquare(props) {
     if (gameState === 0) {
       updateTerrain((terrainType + 1) % 6);
     } else if (gameState === 2) {
-      if (army === startValueTeam) {
+      if (army === team) {
         armies[army].placedUnits--;
-        placedUnit.isPlaced = false;
-        updateColor(colorArray[placedUnit.type]);
-        updateTeam('');
-        updateStart(false);
-      } else if (startValueTeam === '') {
+        unitPlaced.isPlaced = false;
+        mapDispatch({column: column, row: row, color: colorArray[unitPlaced.type], army: '', type: 'removeUnit'});
+        changeTurnPhase();
+      } else if (team === '') {
         if (armies[army].placedUnits < armies[army].max) {
           let unit = makeUnitAbbrev();
           if (tilePlaceCheck(unit, terrainType)) {
             armies[army].placedUnits++;
             putUnitOnSquare(unit);
+            changeTurnPhase();
           } else {
             alert(`This unit type cannot enter this tile.  Please place elsewhere`);
           }
@@ -61,17 +59,20 @@ function GridSquare(props) {
         alert(`You cannot overwrite the other team's starting position`);
       }
     } else if (gameState === 3) {
-      if (isStart) {
-        if (placedUnit.isSelected) {
+      if (team !== army && isStarter) {
+        alert('It is not your turn');
+      }
+      else if (isStarter) {
+        if (unitPlaced.isSelected) {
           removeTileMoveCheck(totalMap, mapDispatch)
-          placedUnit.isSelected = false;
+          unitPlaced.isSelected = false;
           changeTurnPhase();
         } else {
-          tileMoveCheck(totalMap, column, row, placedUnit, startValueTeam, mapDispatch);
+          tileMoveCheck(totalMap, column, row, unitPlaced, team, mapDispatch);
           changeTurnPhase('move');
-          placedUnit.isSelected = true;
-          placedUnit.column = column;
-          placedUnit.row = row;
+          unitPlaced.isSelected = true;
+          unitPlaced.column = column;
+          unitPlaced.row = row;
         }
       } else {
         if (canMove) {
@@ -118,10 +119,10 @@ function GridSquare(props) {
 
   return(
     <div className={`square ${terrainLabel} row${row} col${column}`} onClick={cycleTerrain}>
-    {isStart && 
-      <div className={`startingPosition ${startValueTeam}`}>
+    {isStarter && 
+      <div className={`startingPosition ${team}`}>
         <p className={placedColor}>
-          {placedUnit.smallTitle}
+          {unitPlaced.smallTitle}
         </p>
       </div>
     }
