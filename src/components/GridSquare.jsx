@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { tileMoveCheck, tilePlaceCheck, removeTileMoveCheck } from '../helpers/helpers.js'
+import { tileMoveCheck, tilePlaceCheck, removeTileMoveCheck, tileAttackCheck } from '../helpers/helpers.js'
 
 function GridSquare(props) {
   const { gameState, activeArmy, armies, totalMap, column, row, mapDispatch, gridData, changeTurnPhase } = props;
-  const { terrain, unitPlaced, canMove, isStarter, team, placedColor, hasMoved } = gridData;
+  const { terrain, unitPlaced, canMove, canAttack, isStarter, team, placedColor, hasMoved } = gridData;
   const army = activeArmy === 1 ? 'enemy' : 'player';
   const colorArray = ['red', 'blue', 'green', 'colorless'];
   
@@ -67,12 +67,14 @@ function GridSquare(props) {
       }
       else if (isStarter) {
         if (unitPlaced.isSelected) {
-          removeTileMoveCheck(totalMap, mapDispatch)
+          removeTileMoveCheck(totalMap, mapDispatch);
+          console.log(totalMap);
           unitPlaced.isSelected = false;
           changeTurnPhase();
         } else {
           tileMoveCheck(totalMap, column, row, unitPlaced, team, mapDispatch);
           changeTurnPhase('move');
+          tileAttackCheck(totalMap, column, row, unitPlaced.range, mapDispatch);
           unitPlaced.isSelected = true;
         }
       } else {
@@ -84,6 +86,7 @@ function GridSquare(props) {
             }
           });
           removeTileMoveCheck(totalMap, mapDispatch);
+          console.log(totalMap);
           mapDispatch({column: column, row: row, unit: mover, type: 'moveUnit'});
           changeTurnPhase();
         }
@@ -127,7 +130,11 @@ function GridSquare(props) {
       </div>
     }
     {canMove && 
-    <div className="canMove"></div>}
+      <div className="canMove"></div>}
+    {(canAttack && isStarter) &&
+      <div></div>}
+    {canAttack &&
+      <div className="canAttack"></div>}
     </div>
   )
 }

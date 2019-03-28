@@ -38,8 +38,7 @@ function checkTileLegality(tile, unit, mov) {
 }
 
 function tileMoveCheck(grid, column, row, unit, team, dispatch) {
-  const { range } = unit
-  let element = document.getElementsByClassName(`col${column} row${row}`)[0];
+  const { range } = unit.weapon;
   let mov = unit.stats.mov;
   if (column < 0 || column >= grid.length || row < 0 || row >= grid[0].length || mov < -1) {
     return false;
@@ -50,18 +49,16 @@ function tileMoveCheck(grid, column, row, unit, team, dispatch) {
   } else {
     let tile = grid[column][row];
     let canMove = false;
-    let terrain = grid[column][row].terrain;
-    if (element.children.length > 0) {
-      if (element.children[0].classList.contains(`${team}`) && !tile.canMove) {
-        canMove = checkTileLegality(tile, unit, mov);
-      }
-    } else if (mov >= 0) {
+    if (mov >= 0 && !tile.canMove) {
       canMove = checkTileLegality(tile, unit, mov);
     }
     if (canMove) {
       const action = {column: column, row: row, type: 'canMove'}
       dispatch(action);
-      tileAttackCheck(grid, column, row, range, team, dispatch);
+      tileAttackCheck(grid, column + range, row, team, dispatch);
+      tileAttackCheck(grid, column, row + range, team, dispatch);
+      tileAttackCheck(grid, column - range, row, team, dispatch);
+      tileAttackCheck(grid, column, row - range, team, dispatch);
     }
     unit.stats.mov--;
     tileMoveCheck(grid, column + 1, row, unit, team, dispatch);
@@ -72,20 +69,28 @@ function tileMoveCheck(grid, column, row, unit, team, dispatch) {
   }
 }
 
-function tileAttackCheck(grid, column, row, range, team, dispatch) {
-
+function tileAttackCheck(grid, column, row, team, dispatch) {
+  if (column < 0 || column >= grid.length || row < 0 || row >= grid[0].length) {
+    return false;
+  } else {
+    let tile = grid[column][row];
+    if(!tile.canMove) {
+      const action = {column: column, row: row, type: 'canAttack'}
+      dispatch(action);
+    }
+  }
 }
 
 function removeTileMoveCheck(grid, dispatch) {
   grid.forEach((each, column) => {
     each.forEach((each2, row) => {
-      if (each2.canMove) {
+      if (each2.canMove || each2.canAttack) {
         const action = {column: column, row: row, type: 'removeMove'}
         dispatch(action);
       }
-    })
-  })
+    });
+  });
 }
 
-export { tilePlaceCheck, tileMoveCheck, removeTileMoveCheck };
+export { tilePlaceCheck, tileMoveCheck, removeTileMoveCheck, tileAttackCheck };
   

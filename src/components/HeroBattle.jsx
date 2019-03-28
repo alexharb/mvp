@@ -30,6 +30,7 @@ function HeroBattle () {
               hasUnit: false,
               unitPlaced: {},
               canMove: false,
+              canAttack: false,
               isStarter: false,
               hasMoved: false,
               team: '',
@@ -55,15 +56,20 @@ function HeroBattle () {
       case 'moveUnit':
         let oldTile = oldMap[unit.column][unit.row];
         ({isStarter: tile.isStarter, team: tile.team, placedColor: tile.placedColor, unitPlaced: tile.unitPlaced} = oldTile)
-        tile.hasMoved = true;
-        Object.assign(oldTile, {isStarter: false, unitPlaced: {}})
-        Object.assign(unit, {column: column, row: row, isSelected: false})
+        Object.assign(tile, {hasMoved: true})
+        Object.assign(oldTile, {isStarter: false, unitPlaced: {}});
+        Object.assign(unit, {column: column, row: row, isSelected: false});
         return oldMap;
       case 'canMove':
-        tile.canMove = true;
+        Object.assign(tile, {canMove: true, canAttack: false});
+        return oldMap;
+      case 'canAttack':
+        if (!tile.canMove) {
+          Object.assign(tile, {canAttack: true});
+        }
         return oldMap;
       case 'removeMove':
-        tile.canMove = false;
+        Object.assign(tile, {canMove: false, canAttack: false})
         return oldMap;
       default:
     }
