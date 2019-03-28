@@ -31,6 +31,7 @@ function HeroBattle () {
               unitPlaced: {},
               canMove: false,
               isStarter: false,
+              hasMoved: false,
               team: '',
               placedColor: '',}
             })
@@ -45,31 +46,22 @@ function HeroBattle () {
         tile.terrain = terrain;
         return oldMap;
       case 'removeUnit':
-        tile.isStarter = false;
-        tile.team = army;
-        tile.placedColor = color;
-        tile.unitPlaced = {};
+        Object.assign(tile, {isStarter: false, team: army, placedColor: color, unitPlaced: {}});
         return oldMap;
       case 'placeUnit':
-        tile.isStarter = true;
-        tile.team = army;
-        tile.placedColor = color;
-        tile.unitPlaced = unit;
+        Object.assign(unit, {column: column, row: row});
+        Object.assign(tile, {isStarter: true, team: army, placedColor: color, unitPlaced: unit});
         return oldMap;
       case 'moveUnit':
-        oldMap[unit.column][unit.row].isStarter = false;
-        oldMap[unit.column][unit.row].unitPlaced = {};
-        unit.column = column;
-        unit.row = row;
-        unit.isSelected = false;
-        tile.unitPlaced = unit;
-        tile.isStarter = true;
+        let oldTile = oldMap[unit.column][unit.row];
+        ({isStarter: tile.isStarter, team: tile.team, placedColor: tile.placedColor, unitPlaced: tile.unitPlaced} = oldTile)
+        tile.hasMoved = true;
+        Object.assign(oldTile, {isStarter: false, unitPlaced: {}})
+        Object.assign(unit, {column: column, row: row, isSelected: false})
         return oldMap;
       case 'canMove':
         tile.canMove = true;
         return oldMap;
-        // console.log('newMap');
-        // return newMap;
       case 'removeMove':
         tile.canMove = false;
         return oldMap;
@@ -100,10 +92,17 @@ function HeroBattle () {
       changeTurn(0);
       if (prepPhase === 2) {
         updateStart(true);
+        armies.player.units.forEach((each) => {
+          layout[each.column][each.row].hasMoved = false;
+        });
       }
     } else {
       let newArmy = battleTurn === 1 ? 0 : 1;
       changeTurn(newArmy);
+      const team = newArmy === 1 ? 'enemy' : 'player';
+      armies[team].units.forEach((each) => {
+        layout[each.column][each.row].hasMoved = false;
+      });
     }
   };
 

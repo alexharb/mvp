@@ -3,7 +3,7 @@ import { tileMoveCheck, tilePlaceCheck, removeTileMoveCheck } from '../helpers/h
 
 function GridSquare(props) {
   const { gameState, activeArmy, armies, totalMap, column, row, mapDispatch, gridData, changeTurnPhase } = props;
-  const { terrain, unitPlaced, canMove, isStarter, team, placedColor, hasUnit } = gridData;
+  const { terrain, unitPlaced, canMove, isStarter, team, placedColor, hasMoved } = gridData;
   const army = activeArmy === 1 ? 'enemy' : 'player';
   const colorArray = ['red', 'blue', 'green', 'colorless'];
   
@@ -62,6 +62,9 @@ function GridSquare(props) {
       if (team !== army && isStarter) {
         alert('It is not your turn');
       }
+      else if (hasMoved) {
+        alert('This unit has already moved');
+      }
       else if (isStarter) {
         if (unitPlaced.isSelected) {
           removeTileMoveCheck(totalMap, mapDispatch)
@@ -71,8 +74,6 @@ function GridSquare(props) {
           tileMoveCheck(totalMap, column, row, unitPlaced, team, mapDispatch);
           changeTurnPhase('move');
           unitPlaced.isSelected = true;
-          unitPlaced.column = column;
-          unitPlaced.row = row;
         }
       } else {
         if (canMove) {
@@ -83,7 +84,6 @@ function GridSquare(props) {
             }
           });
           removeTileMoveCheck(totalMap, mapDispatch);
-          putUnitOnSquare(mover);
           mapDispatch({column: column, row: row, unit: mover, type: 'moveUnit'});
           changeTurnPhase();
         }
