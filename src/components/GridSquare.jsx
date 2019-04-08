@@ -41,14 +41,14 @@ function GridSquare(props) {
         armies[army].placedUnits--;
         unitPlaced.isPlaced = false;
         mapDispatch({column: column, row: row, color: colorArray[unitPlaced.type], army: '', type: 'removeUnit'});
-        changeTurnPhase();
+        changeTurnPhase({type: null});
       } else if (team === '') {
         if (armies[army].placedUnits < armies[army].max) {
           let unit = makeUnitAbbrev();
           if (tilePlaceCheck(unit, terrainType)) {
             armies[army].placedUnits++;
             putUnitOnSquare(unit);
-            changeTurnPhase();
+            changeTurnPhase({type: null});
           } else {
             alert(`This unit type cannot enter this tile.  Please place elsewhere`);
           }
@@ -68,12 +68,11 @@ function GridSquare(props) {
       else if (isStarter) {
         if (unitPlaced.isSelected) {
           removeTileMoveCheck(totalMap, mapDispatch);
-          console.log(totalMap);
           unitPlaced.isSelected = false;
-          changeTurnPhase();
+          changeTurnPhase({type: null});
         } else {
           tileMoveCheck(totalMap, column, row, unitPlaced, team, mapDispatch);
-          changeTurnPhase('move');
+          changeTurnPhase({ type: 'move', unit: unitPlaced});
           tileAttackCheck(totalMap, column, row, unitPlaced.range, mapDispatch);
           unitPlaced.isSelected = true;
         }
@@ -86,9 +85,8 @@ function GridSquare(props) {
             }
           });
           removeTileMoveCheck(totalMap, mapDispatch);
-          console.log(totalMap);
           mapDispatch({column: column, row: row, unit: mover, type: 'moveUnit'});
-          changeTurnPhase();
+          changeTurnPhase({type: null});
         }
       }
     }

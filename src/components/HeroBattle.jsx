@@ -17,6 +17,25 @@ function HeroBattle () {
     }
   }
 
+  const initialMover = {
+    title: '',
+    stats: {
+      hp: 1,
+      atk: 1,
+      spd: 1,
+      def: 1,
+      res: 1,
+      mov: 0,
+    },
+    weapon: {text: '{}'},
+    assist: {text: '{}'},
+    special: {text: '{}'},
+    aSkill: {text: '{}'},
+    bSkill: {text: '{}'},
+    cSkill: {text: '{}'},
+    sSeal: {text: '{}'}
+  }
+
   let initialMap = [
     [1, 0, 4, 0, 0, 0, 0, 1],
     [0, 0, 4, 1, 0, 3, 0, 0],
@@ -80,7 +99,8 @@ function HeroBattle () {
   const [turnCount, setCount] = useState(0);
   const [armies, updateArmies] = useState(initialArmies);
   const [layout, mapDispatch] = useReducer(mapUpdate, initialMap);
-  const [battleStart, updateStart] = useState(false);
+  const [movingUnit, setMover] = useState(initialMover);
+  // const [battleStart, updateStart] = useState(false);
   const [turnPhase, updateTurnPhase] = useState(0) //0 is needs to select, 1 is selected, ready to move, 2 is attacking
 
   useEffect(() => {
@@ -97,7 +117,7 @@ function HeroBattle () {
       updatePrep(prepPhase + 1)
       changeTurn(0);
       if (prepPhase === 2) {
-        updateStart(true);
+        // updateStart(true);
         armies.player.units.forEach((each) => {
           layout[each.column][each.row].hasMoved = false;
         });
@@ -109,18 +129,21 @@ function HeroBattle () {
       armies[team].units.forEach((each) => {
         layout[each.column][each.row].hasMoved = false;
       });
-    }
+    };
   };
 
-  function changeTurnPhase(type) {
+  function changeTurnPhase(action) {
+    const { type, unit } = action;
     switch(type) {
       case 'move':
         updateTurnPhase('move');
+        setMover(unit);
         return;
       case 'attack':
         updateTurnPhase('attack');
         return;
       default:
+        setMover(initialMover);
         const newValue = turnPhase === 'default' ? 'default2' : 'default';
         updateTurnPhase(newValue);
         return;
@@ -172,7 +195,8 @@ function HeroBattle () {
                  setup={layout}
                  mapDispatch={mapDispatch}
                  changeTurnPhase={changeTurnPhase}/>
-      <InfoTab prepPhase={prepPhase}/>
+      <InfoTab prepPhase={prepPhase}
+               selectedUnit={movingUnit} />
     </div>
   )
 }

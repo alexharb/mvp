@@ -19,12 +19,12 @@ var Unit = function(mov, weapon) {
     mov: movement,
   };
   this.weapon = weapon;
-  this.assist = {};
-  this.special = {};
-  this.aSkill = {};
-  this.bSkill = {};
-  this.cSkill = {};
-  this.sSeal = {};
+  this.assist = {text: 'this is a dummy data'};
+  this.special = {text: 'this is a dummy data'};
+  this.aSkill = {text: 'this is a dummy data'};
+  this.bSkill = {text: 'this is a dummy data'};
+  this.cSkill = {text: 'this is a dummy data'};
+  this.sSeal = {text: 'this is a dummy data'};
   this.isPlaced = false;
   this.isSelected = false;
   this.team = 0;

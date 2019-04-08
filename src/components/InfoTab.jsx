@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
 function InfoTab(props) {
+  const { prepPhase, selectedUnit } = props;
+  const { title, weapon, assist, special, aSkill, bSkill, cSkill, sSeal, stats } = selectedUnit;
+  const { hp, atk, spd, def, res, mov } = stats;
 
   return(
     <div id="infoTab">
-    { props.prepPhase === 0 &&
+    { prepPhase === 0 &&
       <p>
         First, let's make a map and decide how many units each team will have.
 
@@ -16,7 +19,7 @@ function InfoTab(props) {
         Brown is terrain that can be destroyed by an attack.  Once destroyed, it becomes land.<br></br><br></br>
       </p>
     }
-    { props.prepPhase === 1 &&
+    { prepPhase === 1 &&
       <p>
         Now, let's make our teams.
 
@@ -26,9 +29,26 @@ function InfoTab(props) {
         Cavaliers can move 3 spaces, but cannot traverse through forests, and are slowed down by trenches<br></br><br></br>
       </p>
     }
-    { props.prepPhase === 2 &&
+    { prepPhase === 2 &&
       <p>
         Decide the starting position for each team.
+      </p>
+    }
+    {
+      (prepPhase === 3) &&
+      <p>
+        HP: {hp} <br></br><br></br>
+        Atk: {atk} <br></br><br></br>
+        Spd: {spd} <br></br><br></br>
+        Def: {def} <br></br><br></br>
+        Res: {res} <br></br><br></br>
+        Mov: {mov} <br></br><br></br>
+        A: {aSkill.text} <br></br><br></br>
+        B: {bSkill.text} <br></br><br></br>
+        C: {cSkill.text} <br></br><br></br>
+        S: {sSeal.text} <br></br><br></br>
+        Assist: {assist.text} <br></br><br></br>
+        Special: {special.text} <br></br><br></br>
       </p>
     }
     </div>
