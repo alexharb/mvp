@@ -3,7 +3,7 @@ import MapColumn from './MapColumn.jsx';
 
 
 function GameBoard(props) {
-  const { prepPhase, changePrepPhase, activeArmy, armies, setup, mapDispatch, changeTurnPhase } = props
+  const { prepPhase, changePrepPhase, activeArmy, armies, setup, mapDispatch, changeTurnPhase, selectedUnit } = props
   const army = activeArmy === 1 ? 'enemy' : 'player';
 
   function stringToUpperCase(string) {
@@ -14,14 +14,16 @@ function GameBoard(props) {
   <div id="gameBoard">
     <div id="map">
     {setup.map((each, index) => {
-      return <MapColumn gameState={prepPhase} 
+      return <MapColumn key={index}
+                        gameState={prepPhase} 
                         activeArmy={activeArmy} 
                         armies={armies} 
                         setup={each} 
                         totalMap={setup}
                         column={index}
                         mapDispatch={mapDispatch}
-                        changeTurnPhase={changeTurnPhase}/>
+                        changeTurnPhase={changeTurnPhase}
+                        selectedUnit={selectedUnit}/>
     })}
     </div>
     <div id="options"></div>

@@ -54,7 +54,7 @@ function HeroBattle () {
               hasMoved: false,
               team: '',
               placedColor: '',}
-            })
+            });
   });
 
   function mapUpdate(state, action) {
@@ -66,7 +66,7 @@ function HeroBattle () {
         tile.terrain = terrain;
         return oldMap;
       case 'removeUnit':
-        Object.assign(tile, {isStarter: false, team: army, placedColor: color, unitPlaced: {}});
+        Object.assign(tile, {isStarter: false, team: '', placedColor: color, unitPlaced: {}});
         return oldMap;
       case 'placeUnit':
         Object.assign(unit, {column: column, row: row});
@@ -76,7 +76,7 @@ function HeroBattle () {
         let oldTile = oldMap[unit.column][unit.row];
         ({isStarter: tile.isStarter, team: tile.team, placedColor: tile.placedColor, unitPlaced: tile.unitPlaced} = oldTile)
         Object.assign(tile, {hasMoved: true})
-        Object.assign(oldTile, {isStarter: false, unitPlaced: {}});
+        Object.assign(oldTile, {isStarter: false, unitPlaced: {}, team: ''});
         Object.assign(unit, {column: column, row: row, isSelected: false});
         return oldMap;
       case 'canMove':
@@ -140,6 +140,7 @@ function HeroBattle () {
         setMover(unit);
         return;
       case 'attack':
+        setMover(initialMover);
         updateTurnPhase('attack');
         return;
       default:
@@ -194,9 +195,10 @@ function HeroBattle () {
                  armies={armies}
                  setup={layout}
                  mapDispatch={mapDispatch}
-                 changeTurnPhase={changeTurnPhase}/>
+                 changeTurnPhase={changeTurnPhase}
+                 selectedUnit={movingUnit}/>
       <InfoTab prepPhase={prepPhase}
-               selectedUnit={movingUnit} />
+               selectedUnit={movingUnit}/>
     </div>
   )
 }

@@ -17,6 +17,7 @@ var Weapon = function(weapon, color) {
     this.range = 1;
     this.damage = 1;
   }
+  this.power = 1;
 }
 
 export default Weapon;
