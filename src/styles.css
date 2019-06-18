@@ -1,0 +1,142 @@
+/* 6 across, 8 down */
+#main {
+  display: flex
+}
+
+#infoTab {
+  width: 100%;
+  margin: 10px;
+  border: 2px solid black;
+}
+
+#gameBoard {
+  margin: 10px;
+  flex: 1;
+  position:relative;
+  justify-content: center;
+}
+
+#map {
+  margin: auto;
+  display: flex;
+  width: 300px;
+  height: 400px;
+}
+
+#startButton {
+  display: flex;
+  margin: auto;
+}
+
+#selectorTab {
+  margin: 10px;
+  width: 100%;
+  border: 2px solid black
+}
+
+.column {
+  flex: 1;
+}
+
+.square {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 46px;
+  width: 46px;
+  border: 2px solid black;
+}
+
+.land {
+  /* Normal  Terrain */
+  background-color: rgb(173, 255, 148);
+}
+
+.forest {
+  /* Infantry can only walk into this if adjacent, and cavalry cannot pass or enter */
+  background-color: rgba(20, 87, 0);
+}
+
+.water {
+  /* The catch all for "terrain only accessible by fliers */
+  background-color: rgba(17, 0, 255);
+}
+
+.wall {
+  /* Ipassable terrain */
+  background-color: rgba(95, 95, 95);
+}
+
+.trench {
+  /* Forests for cavs.  Normal for all other movement types */
+  background-color: rgb(253, 255, 118);
+}
+
+.ruin {
+  background-color: rgb(100, 53, 0);
+}
+
+.startingPosition {
+  height: 80%;
+  width: 80%;
+  border: 1px solid;
+  border-radius: 20px;
+}
+
+.startingPosition p {
+  text-align: center;
+  font-size: 12px;
+
+}
+
+.startingPosition.enemy {
+  border-color: red;
+}
+
+.startingPosition.player {
+  border-color: blue;
+}
+
+.canMove {
+  background-color: rgba(0, 255, 234, 0.479);
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 200;
+}
+
+.canAttack {
+  background-color: rgba(255, 0, 0, 0.479);
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 200;
+}
+
+.player {
+  color: blue;
+}
+
+.enemy {
+  color: red;
+}
+
+.red {
+  color: red;
+}
+
+.blue {
+  color: blue;
+}
+
+.green {
+  color: green;
+}
+
+.colorless {
+  color: gray;
+}
+
