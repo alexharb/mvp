@@ -11,8 +11,8 @@ var Unit = function(mov, weapon) {
   }
   this.title = '',
   this.stats = {
-    hp: 10,
-    atk: 1 + weapon.power,
+    hp: 1,
+    atk: 1,
     spd: 1,
     def: 1,
     res: 1,

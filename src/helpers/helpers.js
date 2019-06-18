@@ -8,16 +8,14 @@ function tilePlaceCheck(unit, terrain) {
   } else {
     return true;
   }
-};
+}
 
 function checkTileLegality(tile, unit, mov) {
   const { terrain, isStarter, unitPlaced } = tile
   let legal;
-  if (terrain === 3 || terrain === 5) {
+  if (terrain === 3 || terrain === 5 || (isStarter && unitPlaced !== unit)) {
     legal = false;
     unit.stats.mov = 0;
-  } else if (isStarter && unitPlaced !== unit) {
-    legal = false;
   } else if (unit.type === 3 && terrain === 1) {
     legal = false;
     unit.stats.mov = 0;
@@ -37,13 +35,17 @@ function checkTileLegality(tile, unit, mov) {
     legal = true;
   }
   return legal;
-};
+}
 
 function tileMoveCheck(grid, column, row, unit, team, dispatch) {
   const { range } = unit.weapon;
   let mov = unit.stats.mov;
   if (column < 0 || column >= grid.length || row < 0 || row >= grid[0].length || mov < -1) {
     return false;
+  } else if (mov === -1) {
+    // let node = document.createElement('div');
+    // node.classList.toggle('canAttack');
+    // element.appendChild(node);
   } else {
     let tile = grid[column][row];
     let canMove = false;
@@ -65,21 +67,19 @@ function tileMoveCheck(grid, column, row, unit, team, dispatch) {
     tileMoveCheck(grid, column, row - 1, unit, team, dispatch);
     unit.stats.mov = mov;
   }
-};
+}
 
 function tileAttackCheck(grid, column, row, team, dispatch) {
   if (column < 0 || column >= grid.length || row < 0 || row >= grid[0].length) {
     return false;
   } else {
     let tile = grid[column][row];
-    if (tile.team === team) {
-      return false
-    } else if(!tile.canMove) {
+    if(!tile.canMove) {
       const action = {column: column, row: row, type: 'canAttack'}
       dispatch(action);
     }
   }
-};
+}
 
 function removeTileMoveCheck(grid, dispatch) {
   grid.forEach((each, column) => {
@@ -90,29 +90,7 @@ function removeTileMoveCheck(grid, dispatch) {
       }
     });
   });
-};
-
-function attackCalculate(attacker, defender) {
-  const atkWeapon = attacker.weapon;
-  const atkStats = attacker.stats;
-  const defStats = defender.stats;
-  const damageReduce = atkWeapon.damage === 0 ? defStats.def : defStats.res;
-  const damageDone = atkStats.atk - damageReduce;
-  defStats.hp -= damageDone;
 }
 
-function attackEnemy(grid, column, row, dispatch, attacker, defender) {
-  attackCalculate(attacker, defender);
-  if (defender.stats.hp > 0) {
-    attackCalculate(defender, attacker);
-  }
-};
-
-
-export { 
-  tilePlaceCheck, 
-  tileMoveCheck, 
-  removeTileMoveCheck, 
-  tileAttackCheck, 
-  attackEnemy };
+export { tilePlaceCheck, tileMoveCheck, removeTileMoveCheck, tileAttackCheck };
   

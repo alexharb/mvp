@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { tileMoveCheck, tilePlaceCheck, removeTileMoveCheck, 
-         tileAttackCheck, attackEnemy } from '../helpers/helpers.js'
+import { tileMoveCheck, tilePlaceCheck, removeTileMoveCheck, tileAttackCheck } from '../helpers/helpers.js'
 
 function GridSquare(props) {
-  const { gameState, activeArmy, armies, totalMap,
-          column, row, mapDispatch, gridData, changeTurnPhase, 
-          selectedUnit } = props;
+  const { gameState, activeArmy, armies, totalMap, column, row, mapDispatch, gridData, changeTurnPhase } = props;
   const { terrain, unitPlaced, canMove, canAttack, isStarter, team, placedColor, hasMoved } = gridData;
-
   const army = activeArmy === 1 ? 'enemy' : 'player';
   const colorArray = ['red', 'blue', 'green', 'colorless'];
-  const moveClass = hasMoved ? 'hasMoved' : team;
   
   const [terrainType, updateTerrain] = useState(terrain);
   const [terrainLabel, updateLabel] = useState('land');
@@ -37,7 +32,8 @@ function GridSquare(props) {
        type: 'placeUnit'});
   }
 
-  function terrainClick() {
+
+  function cycleTerrain() {
     if (gameState === 0) {
       updateTerrain((terrainType + 1) % 6);
     } else if (gameState === 2) {
@@ -63,10 +59,7 @@ function GridSquare(props) {
         alert(`You cannot overwrite the other team's starting position`);
       }
     } else if (gameState === 3) {
-      if (canAttack && isStarter) {
-        attackEnemy(totalMap, column, row, mapDispatch, selectedUnit, unitPlaced);
-      }
-      else if (team !== army && isStarter) {
+      if (team !== army && isStarter) {
         alert('It is not your turn');
       }
       else if (hasMoved) {
@@ -85,7 +78,12 @@ function GridSquare(props) {
         }
       } else {
         if (canMove) {
-          let mover = selectedUnit;
+          let mover;
+          armies[army].units.forEach((each) => {
+            if (each.isSelected) {
+              mover = each
+            }
+          });
           removeTileMoveCheck(totalMap, mapDispatch);
           mapDispatch({column: column, row: row, unit: mover, type: 'moveUnit'});
           changeTurnPhase({type: null});
@@ -121,9 +119,9 @@ function GridSquare(props) {
   }
 
   return(
-    <div className={`square ${terrainLabel}`} onClick={terrainClick}>
+    <div className={`square ${terrainLabel} row${row} col${column}`} onClick={cycleTerrain}>
     {isStarter && 
-      <div className={`startingPosition ${moveClass}`}>
+      <div className={`startingPosition ${team}`}>
         <p className={placedColor}>
           {unitPlaced.smallTitle}
         </p>

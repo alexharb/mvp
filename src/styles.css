@@ -101,7 +101,7 @@
 }
 
 .canMove {
-  background-color: rgba(0, 255, 234, 0.4);
+  background-color: rgba(0, 255, 234, 0.479);
   position: absolute;
   height: 100%;
   width: 100%;
@@ -109,7 +109,7 @@
 }
 
 .canAttack {
-  background-color: rgba(255, 0, 0, 0.4);
+  background-color: rgba(255, 0, 0, 0.479);
   position: absolute;
   height: 100%;
   width: 100%;
@@ -122,10 +122,6 @@
 
 .enemy {
   color: red;
-}
-
-.hasMoved {
-  color: gray
 }
 
 .red {
@@ -143,3 +139,4 @@
 .colorless {
   color: gray;
 }
+

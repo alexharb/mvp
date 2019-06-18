@@ -132,11 +132,11 @@ function SelectorTab(props) {
         <button onClick={handleAdd}>Deploy</button>
         </div>
       }
-      {armies.player.units.map((each, index) => {
-        return <UnitView unit={each} team={'player'} key={index}/>
+      {armies.player.units.map((each) => {
+        return <UnitView unit={each} team={'player'}/>
       })}
-      {armies.enemy.units.map((each, index) => {
-        return <UnitView unit={each} team={'enemy'} key={index}/>
+      {armies.enemy.units.map((each) => {
+        return <UnitView unit={each} team={'enemy'}/>
       })}
     </div>
   )
